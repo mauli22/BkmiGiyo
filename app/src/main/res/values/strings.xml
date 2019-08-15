@@ -1,0 +1,50 @@
+<resources>
+    <string name="app_name">Pesan Bakmi-Giyo</string>
+    <string-array name="makanan">
+        <item></item>
+        <item>MIE GODOG</item>
+        <item>MIE GORENG</item>
+        <item>NASI GORENG</item>
+        <item>NASI MAGELANGAN</item>
+        <item>KWETIAW</item>
+    </string-array>
+    <string-array name="minuman_biasa">
+        <item></item>
+        <item>TEH HANGAT</item>
+        <item>ES TEH</item>
+        <item>ES JERUK</item>
+        <item>JERUK HANGAT</item>
+        <item>AIR MINERAL</item>
+    </string-array>
+    <string-array name="minuman_milkshake">
+        <item></item>
+        <item>MILKSHAKE OREO</item>
+        <item>CHOCHOLATO MILK</item>
+        <item>MILKSHAKE VANILA STRAWBERRY</item>
+    </string-array>
+    <string-array name="minuman_jus">
+        <item></item>
+        <item>JUS ALPUKAT</item>
+        <item>JUS MELON</item>
+    </string-array>
+    <string-array name="tingkatpedas">
+        <item></item>
+        <item>Tidak Pedas</item>
+        <item>Sedang</item>
+        <item>Pedas</item>
+    </string-array>
+    <string-array name="meja">
+        <item></item>
+        <item>M-1</item>
+        <item>M-2</item>
+        <item>M-3</item>
+        <item>M-4</item>
+        <item>M-5</item>
+        <item>M-6</item>
+        <item>M-7</item>
+        <item>M-8</item>
+        <item>M-9</item>
+        <item>M-10</item>
+    </string-array>
+
+</resources>
