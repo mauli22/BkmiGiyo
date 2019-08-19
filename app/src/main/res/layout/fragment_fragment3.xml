@@ -8,13 +8,14 @@
     android:id="@+id/pesanan"
     android:background="@drawable/dued"
     android:scrollbars="horizontal"
+    tools:context=".MainActivity"
     >
+
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#000"
         android:alpha="0.6"
-        />
+        android:background="#000" />
 
     <EditText
         android:layout_width="fill_parent"
@@ -31,7 +32,8 @@
         android:background="@android:drawable/edit_text"
         android:paddingBottom="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"/>
+        android:layout_marginLeft="10dp"
+        />
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -41,19 +43,19 @@
         android:text="Nomor Meja"
         android:textColor="#A9A9A9"
         android:layout_below="@id/pelanggan"/>
+
     <Spinner
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="5dp"
-        android:layout_gravity="center"
         android:id="@+id/nomormeja"
+        android:layout_width="137dp"
+        android:layout_height="wrap_content"
         android:layout_below="@id/nomeja"
+        android:layout_gravity="center"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="10dp"
         android:layout_marginBottom="5dp"
-        android:entries="@array/meja"
-        android:background="@android:drawable/spinner_background">
-    </Spinner>
+        android:background="@android:drawable/spinner_background"
+        android:entries="@array/meja"></Spinner>
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="42dp"
@@ -67,21 +69,22 @@
         android:gravity="center"
         android:background="#ff000000"
         android:layout_marginBottom="5dp"
-        android:alpha="0.6"/>
+        android:alpha="0.6" />
     <ListView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:id="@+id/listview"
         android:clickable="true"
         android:layout_below="@+id/proses"
+        android:focusable="true"
         android:divider="@android:color/transparent"
         android:alpha="0.6">
     </ListView>
 
     <Button
         android:id="@+id/proses"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="136dp"
+        android:layout_height="44dp"
         android:layout_below="@id/nomormeja"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
@@ -93,7 +96,19 @@
         android:text="Proses"
         android:textColor="#000"
         android:textStyle="bold"
-        tools:clickable="true"
+        tools:clickable="true" />
+
+    <EditText
+        android:id="@+id/ketTambahan"
+        android:layout_width="235dp"
+        android:layout_height="108dp"
+        android:layout_below="@id/nomeja"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="3dp"
+        android:layout_toRightOf="@id/nomormeja"
+        android:background="@android:drawable/edit_text"
+        android:hint="Keterangan"
+        android:inputType="textMultiLine"
         />
 
 </RelativeLayout >

@@ -30,7 +30,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="Minum Biasa"
+        android:text="Minuman Wedang"
         android:paddingLeft="20dp"
         android:textColor="#A9A9A9"
         android:id="@+id/minumbiasatxt"
@@ -52,7 +52,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="Minuman Milkshake"
+        android:text="Minuman Es"
         android:textColor="#A9A9A9"
         android:paddingLeft="20dp"
         android:id="@+id/milkshaketxt"
@@ -67,28 +67,6 @@
         android:textAlignment="gravity"
         android:background="@android:drawable/spinner_background"
         android:layout_below="@id/milkshaketxt"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp">
-    </Spinner>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="Minuman Jus"
-        android:textColor="#A9A9A9"
-        android:paddingLeft="20dp"
-        android:id="@+id/justxt"
-        android:layout_below="@id/menuminum2"
-        />
-    <Spinner
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="10dp"
-        android:layout_marginTop="5dp"
-        android:id="@+id/menuminum3"
-        android:textAlignment="gravity"
-        android:background="@android:drawable/spinner_background"
-        android:layout_below="@id/justxt"
         android:layout_marginRight="10dp"
         android:layout_marginLeft="10dp">
     </Spinner>

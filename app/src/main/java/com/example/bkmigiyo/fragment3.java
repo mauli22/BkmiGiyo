@@ -1,23 +1,19 @@
 package com.example.bkmigiyo;
 
-import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.renderscript.Sampler;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -29,42 +25,14 @@ import android.widget.Toast;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.androidnetworking.AndroidNetworking;
-import com.androidnetworking.common.Priority;
-import com.androidnetworking.error.ANError;
-import com.androidnetworking.interfaces.JSONObjectRequestListener;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-
-import static android.provider.ContactsContract.CommonDataKinds.Website.URL;
 
 
 public class fragment3 extends Fragment {
@@ -75,9 +43,9 @@ public class fragment3 extends Fragment {
     private CheckBox uritan, ati, kepala, ceker, telor, daging;
     private TextView rincian;
     private ProgressDialog progress;
-    EditText pelanggan1;
+    EditText pelanggan1,catatan;
     Spinner meja1;
-    private static final String ServerURL = "http://192.168.188.2/cafe-api/addPesanan.php";
+
     // Creating Volley RequestQueue.
     RequestQueue requestQueue;
 
@@ -95,6 +63,7 @@ public class fragment3 extends Fragment {
     MainActivity a;
     int x = 1;
     int b = 1;
+    final static String tag = "MauliCreator-BakmiGiyo2019";
 
 
     @Override
@@ -111,15 +80,13 @@ public class fragment3 extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         lv = view.findViewById(R.id.listview);
         records = new ArrayList<String>();
-        adapter = new CustomAdapter(getContext(), R.layout.list_item, R.id.tempatid, records);
+        adapter = new CustomAdapter(getContext(), R.layout.list_item, R.id.tempatpesanan, records);
         lv.setAdapter(adapter);
         dbhelper = new DBPesanan(getContext());
         final SQLiteDatabase database = dbhelper.getWritableDatabase();
 
-
+        MainActivity a = new MainActivity();
         Log.d("fragment3", "LISTVIEW BERJALAN");
-        AndroidNetworking.initialize(getContext()); //inisialisasi library FAN
-
 
         proses = (Button) view.findViewById(R.id.proses);
         hapus = view.findViewById(R.id.delete);
@@ -128,7 +95,7 @@ public class fragment3 extends Fragment {
         editor = sharedPreferences.edit();
         pelanggan1 = view.findViewById(R.id.pelanggan);
         meja1 = view.findViewById(R.id.nomormeja);
-
+        catatan = view.findViewById(R.id.ketTambahan);
 
         requestQueue = Volley.newRequestQueue(getActivity());
         progressDialog = new ProgressDialog(getActivity());
@@ -152,6 +119,7 @@ public class fragment3 extends Fragment {
 
                 final String pelanggan = pelanggan1.getText().toString().trim();
                 final String meja = meja1.getSelectedItem().toString();
+                final String cttn = catatan.getText().toString();
                 if (TextUtils.isEmpty(pelanggan)) {
                     Toast.makeText(getContext(), "Pelanggan is Required", Toast.LENGTH_SHORT).show();
                 } else if (TextUtils.isEmpty(meja)) {
@@ -166,13 +134,13 @@ public class fragment3 extends Fragment {
                     if (c.getCount() > 0)
                         while (c.moveToNext()) {
                             //
-                            if (c.getString(c.getColumnIndex(DBPesanan.makanan))==null) {
+                            if (c.getString(c.getColumnIndex(DBPesanan.makanan))== null) {
                                 menu = c.getString(c.getColumnIndex(DBPesanan.minuman));
                             }else {
                                 menu = c.getString(c.getColumnIndex(DBPesanan.makanan));
                             }
 
-                            if (c.getString(c.getColumnIndex(DBPesanan.toping))==null) {
+                            if (c.getString(c.getColumnIndex(DBPesanan.toping))== null) {
                                 toping = "-";
                             }else {
                                 toping = c.getString(c.getColumnIndex(DBPesanan.toping));
@@ -196,7 +164,7 @@ public class fragment3 extends Fragment {
                                 jumlH = c.getString(c.getColumnIndex(DBPesanan.jumlahmakanan));
                             }
 
-                            insertPesanan(menu,toping,pedas,keterangan,jumlH);
+                            insertPesanan(menu,toping,pedas,keterangan,jumlH,cttn);
                             //Log.d("seharusnyaaa",menu+" - "+toping+" - "+pedas+" - "+keterangan+" - "+jumlH);
                         }
 
@@ -213,7 +181,6 @@ public class fragment3 extends Fragment {
                     getActivity().startActivity(new Intent(getActivity(), MainActivity.class));
                     getActivity().finish();
 
-
                 }
 
             }
@@ -226,7 +193,7 @@ public class fragment3 extends Fragment {
                 String sql = "SELECT * FROM " + DBPesanan.table_name;
                 //MEMBUAT KURSOR UNTUK MEMBUKA DATABASE
                 Cursor c = database.rawQuery(sql, null);
-                String makanan, toping, toping1, toping2, toping3, toping4, toping5, pedas, keterangan1, keterangan2, keterangan3, keterangan4, jumlahmakanan;
+                String makanan, toping, pedas, keterangan1,  jumlahmakanan;
                 String minuman, jumlahminuman;
                 int id;
                 if (c.getCount() > 0)
@@ -271,6 +238,13 @@ public class fragment3 extends Fragment {
                             public void onResponse(String response) {
                                 //Toast.makeText(getActivity(),"Server : " + response, Toast.LENGTH_LONG).show();
                                 Log.d("berhasil",response);
+                                if (response.contains(Config.INPT_PELANGGAN_SUCCES)) {
+                                    //Displaying an error message on toast
+                                    Toast.makeText(getContext(), "Masuk!", Toast.LENGTH_LONG).show();
+                                } else {
+                                    //Displaying an error message on toast
+                                    Toast.makeText(getContext(), "Gagal Input Pelanggan", Toast.LENGTH_LONG).show();
+                                }
                             }
                         },
                         new Response.ErrorListener() {
@@ -286,6 +260,7 @@ public class fragment3 extends Fragment {
                         Map<String,String> params = new HashMap<String, String>();
                         params.put(Config.KEY_MEJA,nomeja);
                         params.put(Config.KEY_PELANGGAN,pelanggan);
+                        params.put(Config.KEY_PELAYAN,"Mauli Bayu Segoro");
                         //Toast.makeText(getContext(),nomeja+" - "+pelanggan,Toast.LENGTH_LONG).show();
                         Log.d("seharusnyaaa",nomeja+" - "+pelanggan);
 
@@ -296,16 +271,25 @@ public class fragment3 extends Fragment {
                 RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
                 requestQueue.add(stringRequest);
             }
-    public void insertPesanan(final String menu1, final String toping1, final String pedas1, final String keterangan1, final String jmlh) {
+    public void insertPesanan(final String menu1, final String toping1, final String pedas1, final String keterangan1, final String jmlh, final String catatanmenu) {
         final ProgressDialog loading = ProgressDialog.show(getActivity(),"Pesanan Diproses...","Tunggu...",false,false);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.URL_ADDpssn,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        loading.dismiss();
                         //Toast.makeText(getActivity(),"Server : " + response, Toast.LENGTH_LONG).show();
-                        Toast.makeText(getActivity(),"Pesanan Berhasil Diinput", Toast.LENGTH_LONG).show();
-                        Log.d("berhasil",response);
+                        //If we are getting success from server
+                        if (response.contains(Config.INPT_PSNAN_SUCCES)) {
+                            loading.dismiss();
+                            //Displaying an error message on toast
+                            Toast.makeText(getActivity(),"Pesanan Berhasil Diinput", Toast.LENGTH_LONG).show();
+                            Log.d("berhasil",response);
+                        } else {
+                            loading.dismiss();
+                            //Displaying an error message on toast
+                            Toast.makeText(getActivity(), "Gagal Input Pesanan", Toast.LENGTH_LONG).show();
+                        }
+
                     }
                 },
                 new Response.ErrorListener() {
@@ -325,8 +309,9 @@ public class fragment3 extends Fragment {
                 params.put(Config.KEY_PEDAS,pedas1);
                 params.put(Config.KEY_KETERANGAN,keterangan1);
                 params.put(Config.KEY_JMLH,jmlh);
+                params.put(Config.KEY_CTTN,catatanmenu);
                 //Toast.makeText(getContext(),nomeja+" - "+pelanggan,Toast.LENGTH_LONG).show();
-                Log.d("seharusnyaaa",menu1+" - "+toping1+" - "+pedas1+" - "+keterangan1+" - "+jmlh);
+                Log.d("seharusnyaaa",menu1+" - "+toping1+" - "+pedas1+" - "+keterangan1+" - "+jmlh+" - "+catatanmenu);
                 return params;
             }
 

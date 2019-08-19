@@ -138,7 +138,7 @@ public class Fragment1 extends Fragment {
                     getActivity().finish();
 
                 }catch (Exception e){
-                    e.printStackTrace();
+                   // e.printStackTrace();
                 }
             }
 
@@ -158,7 +158,7 @@ public class Fragment1 extends Fragment {
                 //Adding the name of the student to array list
                 menu.add(json.getString("namaMenu"));
             } catch (JSONException e) {
-                e.printStackTrace();
+               // e.printStackTrace();
             }
         }
 
@@ -175,7 +175,7 @@ public class Fragment1 extends Fragment {
                 //Adding the name of the student to array list
                 mtoping.add(json.getString("namaToping"));
             } catch (JSONException e) {
-                e.printStackTrace();
+               // e.printStackTrace();
             }
         }
 
@@ -194,7 +194,7 @@ public class Fragment1 extends Fragment {
                             getmenu(result);
                             gettoping(result);
                         } catch (JSONException e) {
-                            e.printStackTrace();
+                            //e.printStackTrace();
                         }
                     }
                 },

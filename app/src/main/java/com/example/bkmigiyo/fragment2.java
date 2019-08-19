@@ -31,13 +31,13 @@ public class fragment2 extends Fragment {
     private Button btnOpenCurrentFragment;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
-    private Spinner spminum, spmilkshake, spjus;
+    private Spinner spminum, spmilkshake;
 
     private DBPesanan dbPesanan;
     private String setMinum,minum1,minum2,minum3;
 
     //An ArrayList for Spinner Items
-    private ArrayList<String> minum,milkshake,jus;
+    private ArrayList<String> minum, minumEs;
 
     //JSON Array
     private JSONArray result;
@@ -48,13 +48,11 @@ public class fragment2 extends Fragment {
         btnOpenCurrentFragment = (Button) view.findViewById(R.id.send2);
         spminum = view.findViewById(R.id.menuminum);
         spmilkshake = view.findViewById(R.id.menuminum2);
-        spjus = view.findViewById(R.id.menuminum3);
         dbPesanan = new DBPesanan(getContext());
 
         //Initializing the ArrayList
         minum = new ArrayList<String>();
-        milkshake = new ArrayList<String>();
-        jus = new ArrayList<String>();
+        minumEs = new ArrayList<String>();
 
         sharedPreferences = getActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
@@ -97,12 +95,8 @@ public class fragment2 extends Fragment {
             minum2 = spmilkshake.getSelectedItem().toString();
         else
             minum2="";
-        if (spmilkshake.getSelectedItem().toString() != "")
-            minum3 = spjus.getSelectedItem().toString();
-        else
-            minum3="";
 
-        setMinum = minum1+""+minum2+""+minum3;
+        setMinum = minum1+""+minum2;
     }
     private void getminuman(JSONArray j){
         //Traversing through all the items in the json array
@@ -114,14 +108,14 @@ public class fragment2 extends Fragment {
                 //Adding the name of the student to array list
                 minum.add(json.getString("namaMinuman"));
             } catch (JSONException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
             }
         }
 
         //Setting adapter to show the items in the spinner
         spminum.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, minum));
     }
-    private void getmilkshake(JSONArray j){
+    private void getminmEs(JSONArray j){
         //Traversing through all the items in the json array
         for(int i=0;i<j.length();i++){
             try {
@@ -129,31 +123,14 @@ public class fragment2 extends Fragment {
                 JSONObject json = j.getJSONObject(i);
 
                 //Adding the name of the student to array list
-                milkshake.add(json.getString("namaMilkshake"));
+                minumEs.add(json.getString("namaEs"));
             } catch (JSONException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
             }
         }
 
         //Setting adapter to show the items in the spinner
-        spmilkshake.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, milkshake));
-    }
-    private void getjus(JSONArray j){
-        //Traversing through all the items in the json array
-        for(int i=0;i<j.length();i++){
-            try {
-                //Getting json object
-                JSONObject json = j.getJSONObject(i);
-
-                //Adding the name of the student to array list
-                jus.add(json.getString("namaJus"));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-
-        //Setting adapter to show the items in the spinner
-        spjus.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, jus));
+        spmilkshake.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, minumEs));
     }
     private void getDataMinuman(){
         StringRequest stringRequest = new StringRequest(Config.URLmenu,
@@ -165,10 +142,9 @@ public class fragment2 extends Fragment {
                             j = new JSONObject(response);
                             result = j.getJSONArray("result");
                             getminuman(result);
-                            getmilkshake(result);
-                            getjus(result);
+                            getminmEs(result);
                         } catch (JSONException e) {
-                            e.printStackTrace();
+                            //e.printStackTrace();
                         }
                     }
                 },

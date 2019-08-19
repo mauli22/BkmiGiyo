@@ -15,7 +15,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -44,6 +48,36 @@ public class MainActivity extends AppCompatActivity {
     private Activity activity;
     LayoutInflater inflater;
     ArrayList<String> records;
+    SharedPreferences sharedpreferences;
+
+    public String petugasPelayan="";
+    final static String tag = "MauliCreator-BakmiGiyo2019";
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.optionmenu,menu);
+        return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch (item.getItemId()){
+            case R.id.logout:
+                // update login session ke FALSE dan mengosongkan nilai id dan username
+                SharedPreferences.Editor editor = sharedpreferences.edit();
+                editor.putBoolean(LoginActivity.session_status, false);
+                editor.putString(Config.KEY_EMAIL, null);
+                editor.commit();
+
+                Intent intent = new Intent(this,LoginActivity.class);
+                finish();
+                startActivity(intent);
+                return true;
+        }
+        return false;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         dbhelper = new DBPesanan(this);
         records=new ArrayList<String>();
+        sharedpreferences = getSharedPreferences(LoginActivity.my_shared_preferences, Context.MODE_PRIVATE);
 
         // to hide the devider between action bar and tabLayout
         getSupportActionBar().setElevation(0);
@@ -63,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
         slidingTabAdapter = new SlidingTabAdapter(getSupportFragmentManager());
         viewPager.setAdapter(slidingTabAdapter);
 
-
+        petugasPelayan = getIntent().getStringExtra(tag);
 
 
         //set your tab's item
@@ -96,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
+                petugasPelayan = getIntent().getStringExtra(tag);
                 viewPager.setCurrentItem(tab.getPosition());
             }
 
@@ -137,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
         final String del_id1=bt.getTag().toString();
 
         final DBPesanan dbhelper = new DBPesanan(this);
-        final CustomAdapter adapter = new CustomAdapter(getApplicationContext(), R.layout.list_item, R.id.tempatid, records);
+        final CustomAdapter adapter = new CustomAdapter(getApplicationContext(), R.layout.list_item, R.id.tempatpesanan, records);
         sharedPreferences = this.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
 
@@ -187,7 +223,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         final DBPesanan dbhelper = new DBPesanan(this);
-        final CustomAdapter adapter = new CustomAdapter(getApplicationContext(), R.layout.list_item, R.id.tempatid, records);
+        final CustomAdapter adapter = new CustomAdapter(getApplicationContext(), R.layout.list_item, R.id.tempatpesanan, records);
         sharedPreferences = this.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
 
@@ -221,5 +257,4 @@ public class MainActivity extends AppCompatActivity {
             }
         database.close();
     }
-
 }

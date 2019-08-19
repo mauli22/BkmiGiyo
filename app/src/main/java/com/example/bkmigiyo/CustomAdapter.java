@@ -1,9 +1,6 @@
 package com.example.bkmigiyo;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,10 +8,8 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -55,11 +50,11 @@ public class CustomAdapter extends ArrayAdapter<String> {
 
         String[] row_items=records.get(position).split("-");
 
-        viewHolder.id = (TextView) itemView.findViewById(R.id.tempatid);
-        viewHolder.t4makanan= (TextView) itemView.findViewById(R.id.tempatmakan);
+        //viewHolder.id = (TextView) itemView.findViewById(R.id.tempatid);
+        viewHolder.t4makanan= (TextView) itemView.findViewById(R.id.tempatpesanan);
         viewHolder.t4jumlhmakan= (TextView) itemView.findViewById(R.id.tempatjumlahmakanan);
-        viewHolder.t4minum= (TextView) itemView.findViewById(R.id.tempatminum);
-        viewHolder.t4jmlhminum= (TextView) itemView.findViewById(R.id.tempatjumlahminum);
+       // viewHolder.t4minum= (TextView) itemView.findViewById(R.id.tempatminum);
+        //viewHolder.t4jmlhminum= (TextView) itemView.findViewById(R.id.tempatjumlahminum);
         viewHolder.t4toping= (TextView) itemView.findViewById(R.id.tempattoping);
         viewHolder.t4pedas= (TextView) itemView.findViewById(R.id.tempatpedas);
         viewHolder.t4keterangan= (TextView) itemView.findViewById(R.id.tempatketerangan);
@@ -69,18 +64,23 @@ public class CustomAdapter extends ArrayAdapter<String> {
 
         //set text to each textview of listview item
         ViewHolder holder =(ViewHolder) itemView.getTag();
-        holder.id.setText("No : "+row_items[0]);
-        holder.t4makanan.setText(row_items[1]);
+        //holder.id.setText("No : "+row_items[0]);
+        //holder.t4makanan.setText(row_items[1]);
+        if (row_items[1].isEmpty()){
+            holder.t4makanan.setText(row_items[6]);
+        }else{
+            holder.t4makanan.setText(row_items[1]);
+        }
         if (row_items[5].isEmpty()) {
-            holder.t4jumlhmakan.setText("");
+            holder.t4jumlhmakan.setText(row_items[7]);
         }else
             holder.t4jumlhmakan.setText(row_items[5]);
 
-        holder.t4minum.setText(row_items[6]);
-        if (row_items[7].isEmpty()) {
-            holder.t4jmlhminum.setText("");
-        }else
-            holder.t4jmlhminum.setText(row_items[7]);
+//        holder.t4minum.setText(row_items[6]);
+//        if (row_items[7].isEmpty()) {
+//            holder.t4jmlhminum.setText("");
+//        }else
+//            holder.t4jmlhminum.setText(row_items[7]);
 
         if (row_items[4].isEmpty()) {
             holder.t4toping.setText("");
