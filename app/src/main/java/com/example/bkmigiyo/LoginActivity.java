@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -27,18 +28,24 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LoginActivity extends AppCompatActivity  {
+public class LoginActivity extends AppCompatActivity {
 
-    EditText username,password;
+    EditText username, password;
     ProgressDialog pDialog;
+    //An ArrayList for Spinner Items
+    private ArrayList<String> user;
 
-    String karyawanlogin="";
+    String karyawanlogin = "";
+    String resp = "";
     String umild;
+    String uname;
     final static String tag = "MauliCreator-BakmiGiyo2019";
     public static final String my_shared_preferences = "my_shared_preferences";
     public static final String session_status = "session_status";
     SharedPreferences sharedpreferences;
     Boolean session = false;
+    //JSON Array
+    private JSONArray result;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +56,8 @@ public class LoginActivity extends AppCompatActivity  {
 
         username = findViewById(R.id.uname);
         password = findViewById(R.id.password);
+        //Initializing the ArrayList
+        user = new ArrayList<String>();
 
 
         // Cek session login jika TRUE maka langsung buka MainActivity
@@ -56,16 +65,16 @@ public class LoginActivity extends AppCompatActivity  {
         session = sharedpreferences.getBoolean(session_status, false);
         umild = sharedpreferences.getString(Config.KEY_EMAIL, null);
 
-        if (session) {
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            intent.putExtra(tag, karyawanlogin);
-            startActivity(intent);
-        }
+//        if (session) {
+//            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+//            intent.putExtra(tag, karyawanlogin);
+//            startActivity(intent);
+//        }
     }
 
     private void login() {
         //Getting values from edit texts
-        final String uname = username.getText().toString().trim();
+        uname = username.getText().toString().trim();
         final String passwd = password.getText().toString().trim();
         pDialog.setMessage("Proses masuk...");
         showDialog();
@@ -84,8 +93,8 @@ public class LoginActivity extends AppCompatActivity  {
                             hideDialog();
                             karyawanlogin = response;
                             //Displaying an error message on toast
-                            Toast.makeText(LoginActivity.this, "Welcome bro, "+karyawanlogin, Toast.LENGTH_LONG).show();
-                            gotoCourseActivity(uname,response);
+                            Toast.makeText(LoginActivity.this, "Welcome bro, " + karyawanlogin, Toast.LENGTH_LONG).show();
+                            gotoCourseActivity(response);
 
 
                         }
@@ -127,16 +136,22 @@ public class LoginActivity extends AppCompatActivity  {
             pDialog.dismiss();
     }
 
-    private void gotoCourseActivity(String username, String respon) {
+    private void gotoCourseActivity(String respon) {
         // menyimpan login ke session
         SharedPreferences.Editor editor = sharedpreferences.edit();
         editor.putBoolean(session_status, true);
-        editor.putString(Config.KEY_EMAIL, username);
+        editor.putString(Config.KEY_EMAIL, uname);
         editor.commit();
 
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-        intent.putExtra(tag,respon);
-        Log.d("intent",respon);
+
+        Bundle data = new Bundle();
+        data.putString(tag, karyawanlogin);
+        fragment3 fragtry = new fragment3();
+        fragtry.setArguments(data);
+
+        intent.putExtras(data);
+        Log.d("intent", data.toString());
         startActivity(intent);
         finish();
     }
@@ -145,7 +160,4 @@ public class LoginActivity extends AppCompatActivity  {
         login();
     }
 
-    public void isi(String respon){
-        karyawanlogin = respon;
-    }
 }

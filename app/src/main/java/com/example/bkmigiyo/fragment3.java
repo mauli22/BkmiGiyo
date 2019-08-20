@@ -43,7 +43,7 @@ public class fragment3 extends Fragment {
     private CheckBox uritan, ati, kepala, ceker, telor, daging;
     private TextView rincian;
     private ProgressDialog progress;
-    EditText pelanggan1,catatan;
+    EditText pelanggan1,catatan, karyawan;
     Spinner meja1;
 
     // Creating Volley RequestQueue.
@@ -64,12 +64,20 @@ public class fragment3 extends Fragment {
     int x = 1;
     int b = 1;
     final static String tag = "MauliCreator-BakmiGiyo2019";
-
+    String pelayan="";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_fragment3, null);
 
+        pelayan = getActivity().getIntent().getStringExtra(tag);
+        Bundle data = new Bundle();
+        data.putString(tag, pelayan);
+        fragment2 fragtry = new fragment2();
+        Fragment1 ae = new Fragment1();
+        fragtry.setArguments(data);
+        ae.setArguments(data);
+        Toast.makeText(getContext(),"ini fragment3, "+pelayan,Toast.LENGTH_SHORT).show();
         return rootView;
         //return inflater.inflate(R.layout.fragment_fragment3, container, false);
     }
@@ -85,8 +93,8 @@ public class fragment3 extends Fragment {
         dbhelper = new DBPesanan(getContext());
         final SQLiteDatabase database = dbhelper.getWritableDatabase();
 
-        MainActivity a = new MainActivity();
         Log.d("fragment3", "LISTVIEW BERJALAN");
+//
 
         proses = (Button) view.findViewById(R.id.proses);
         hapus = view.findViewById(R.id.delete);
@@ -96,6 +104,7 @@ public class fragment3 extends Fragment {
         pelanggan1 = view.findViewById(R.id.pelanggan);
         meja1 = view.findViewById(R.id.nomormeja);
         catatan = view.findViewById(R.id.ketTambahan);
+        karyawan = view.findViewById(R.id.pelayan);
 
         requestQueue = Volley.newRequestQueue(getActivity());
         progressDialog = new ProgressDialog(getActivity());
@@ -120,12 +129,13 @@ public class fragment3 extends Fragment {
                 final String pelanggan = pelanggan1.getText().toString().trim();
                 final String meja = meja1.getSelectedItem().toString();
                 final String cttn = catatan.getText().toString();
+                final String pelayan1 = karyawan.getText().toString();
                 if (TextUtils.isEmpty(pelanggan)) {
                     Toast.makeText(getContext(), "Pelanggan is Required", Toast.LENGTH_SHORT).show();
                 } else if (TextUtils.isEmpty(meja)) {
                     Toast.makeText(getContext(), "Meja is Required", Toast.LENGTH_SHORT).show();
                 } else {
-
+                    inserPelanggan(meja,pelanggan,pelayan1);
                     SQLiteDatabase database = dbhelper.getReadableDatabase();
                     String sql = "SELECT * FROM " + DBPesanan.table_name;
                     //MEMBUAT KURSOR UNTUK MEMBUKA DATABASE
@@ -164,11 +174,9 @@ public class fragment3 extends Fragment {
                                 jumlH = c.getString(c.getColumnIndex(DBPesanan.jumlahmakanan));
                             }
 
-                            insertPesanan(menu,toping,pedas,keterangan,jumlH,cttn);
-                            //Log.d("seharusnyaaa",menu+" - "+toping+" - "+pedas+" - "+keterangan+" - "+jumlH);
+                            insertPesanan(menu,toping,pedas,keterangan,jumlH,cttn,pelanggan,meja);
+                            Log.d("seharusnyaaa",menu+" - "+toping+" - "+pedas+" - "+keterangan+" - "+jumlH);
                         }
-
-                    inserPelanggan(meja,pelanggan);
 
                     //SQLiteDatabase database = dbhelper.getReadableDatabase();
                     database.execSQL("DELETE FROM " + DBPesanan.table_name);
@@ -178,6 +186,12 @@ public class fragment3 extends Fragment {
 
                     editor.putString("tab_opened", "2");
                     editor.commit();
+                    Bundle data = new Bundle();
+                    data.putString(tag, pelayan);
+                    fragment2 fragtry = new fragment2();
+                    Fragment1 ae = new Fragment1();
+                    fragtry.setArguments(data);
+                    ae.setArguments(data);
                     getActivity().startActivity(new Intent(getActivity(), MainActivity.class));
                     getActivity().finish();
 
@@ -230,7 +244,7 @@ public class fragment3 extends Fragment {
                 adapter.notifyDataSetChanged();
             }
 
-            public void inserPelanggan(final String nomeja, final String pelanggan) {
+            public void inserPelanggan(final String nomeja, final String pelanggan, final String pegawai) {
                 //final ProgressDialog progressDialog = ProgressDialog.show(getActivity(),"Menambahkan...","Tunggu...",false,false);
                 StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.URL_ADDPLGN,
                         new Response.Listener<String>() {
@@ -260,7 +274,7 @@ public class fragment3 extends Fragment {
                         Map<String,String> params = new HashMap<String, String>();
                         params.put(Config.KEY_MEJA,nomeja);
                         params.put(Config.KEY_PELANGGAN,pelanggan);
-                        params.put(Config.KEY_PELAYAN,"Mauli Bayu Segoro");
+                        params.put(Config.KEY_PELAYAN,pegawai);
                         //Toast.makeText(getContext(),nomeja+" - "+pelanggan,Toast.LENGTH_LONG).show();
                         Log.d("seharusnyaaa",nomeja+" - "+pelanggan);
 
@@ -271,7 +285,7 @@ public class fragment3 extends Fragment {
                 RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
                 requestQueue.add(stringRequest);
             }
-    public void insertPesanan(final String menu1, final String toping1, final String pedas1, final String keterangan1, final String jmlh, final String catatanmenu) {
+    public void insertPesanan(final String menu1, final String toping1, final String pedas1, final String keterangan1, final String jmlh, final String catatanmenu,final String nomeja, final String pelanggan) {
         final ProgressDialog loading = ProgressDialog.show(getActivity(),"Pesanan Diproses...","Tunggu...",false,false);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.URL_ADDpssn,
                 new Response.Listener<String>() {
@@ -310,6 +324,8 @@ public class fragment3 extends Fragment {
                 params.put(Config.KEY_KETERANGAN,keterangan1);
                 params.put(Config.KEY_JMLH,jmlh);
                 params.put(Config.KEY_CTTN,catatanmenu);
+                params.put(Config.KEY_PELANGGAN,pelanggan);
+                params.put(Config.KEY_MEJA,nomeja);
                 //Toast.makeText(getContext(),nomeja+" - "+pelanggan,Toast.LENGTH_LONG).show();
                 Log.d("seharusnyaaa",menu1+" - "+toping1+" - "+pedas1+" - "+keterangan1+" - "+jmlh+" - "+catatanmenu);
                 return params;

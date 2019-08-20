@@ -52,12 +52,24 @@ public class Fragment1 extends Fragment {
 
     //JSON Array
     private JSONArray result;
+    final static String tag = "MauliCreator-BakmiGiyo2019";
+    String pelayan="";
 
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_fragment1, null);
+
+        pelayan = getActivity().getIntent().getStringExtra(tag);
+        Bundle data = new Bundle();
+        data.putString(tag, pelayan);
+        fragment3 fragtry = new fragment3();
+        fragment2 ae = new fragment2();
+        fragtry.setArguments(data);
+        ae.setArguments(data);
+        Toast.makeText(getContext(),"ini fragment1, "+pelayan,Toast.LENGTH_SHORT).show();
+
         return inflater.inflate(R.layout.fragment_fragment1, container, false);
 
     }
@@ -134,6 +146,12 @@ public class Fragment1 extends Fragment {
 
                     editor.putString("tab_opened", "2");
                     editor.commit();
+                    Bundle data = new Bundle();
+                    data.putString(tag, pelayan);
+                    fragment3 fragtry = new fragment3();
+                    fragment2 ae = new fragment2();
+                    fragtry.setArguments(data);
+                    ae.setArguments(data);
                     getActivity().startActivity(new Intent(getActivity(), MainActivity.class));
                     getActivity().finish();
 
