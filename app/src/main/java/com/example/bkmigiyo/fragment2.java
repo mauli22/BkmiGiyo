@@ -69,12 +69,7 @@ public class fragment2 extends Fragment {
                 try{
                     Toast.makeText(getContext(),"Data Disimpan",Toast.LENGTH_SHORT).show();
 
-                    Bundle data = new Bundle();
-                    data.putString(tag, pelayan);
-                    fragment3 fragtry = new fragment3();
-                    Fragment1 ae = new Fragment1();
-                    fragtry.setArguments(data);
-                    ae.setArguments(data);
+
                     editor.putString("tab_opened", "2");
                     editor.commit();
                     getActivity().startActivity(new Intent(getActivity(), MainActivity.class));
@@ -85,14 +80,7 @@ public class fragment2 extends Fragment {
                 }
             }
         });
-        pelayan = getActivity().getIntent().getStringExtra(tag);
-        Bundle data = new Bundle();
-        data.putString(tag, pelayan);
-        fragment3 fragtry = new fragment3();
-        Fragment1 ae = new Fragment1();
-        fragtry.setArguments(data);
-        ae.setArguments(data);
-        Toast.makeText(getContext(),"ini fragment2, "+pelayan,Toast.LENGTH_SHORT).show();
+
         return view;
     }
 

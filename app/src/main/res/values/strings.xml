@@ -8,16 +8,16 @@
     </string-array>
     <string-array name="meja">
         <item></item>
-        <item>M-1</item>
-        <item>M-2</item>
-        <item>M-3</item>
-        <item>M-4</item>
-        <item>M-5</item>
-        <item>M-6</item>
-        <item>M-7</item>
-        <item>M-8</item>
-        <item>M-9</item>
-        <item>M-10</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
     </string-array>
 
 </resources>

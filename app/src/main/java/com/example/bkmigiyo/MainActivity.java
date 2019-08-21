@@ -98,14 +98,6 @@ public class MainActivity extends AppCompatActivity {
         slidingTabAdapter = new SlidingTabAdapter(getSupportFragmentManager());
         viewPager.setAdapter(slidingTabAdapter);
 
-        petugasPelayan = getIntent().getStringExtra(tag);
-
-        Bundle data = new Bundle();
-        data.putString(tag, petugasPelayan);
-        fragment3 fragtry = new fragment3();
-        fragtry.setArguments(data);
-        Toast.makeText(this,"ini mainactivity, "+petugasPelayan,Toast.LENGTH_SHORT).show();
-
 
         //set your tab's item
         makanan = tabLayout.newTab();

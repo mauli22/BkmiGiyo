@@ -1,7 +1,7 @@
 package com.example.bkmigiyo;
 
 public class Config {
-    private static final String ipAddres = "http://192.168.56.1/" ;
+    private static final String ipAddres = "http://192.168.0.107/" ;
     //Dibawah ini merupakan Pengalamatan dimana Lokasi Skrip CRUD PHP disimpan
     //PENTING! JANGAN LUPA GANTI IP SESUAI DENGAN IP KOMPUTER DIMANA DATA PHP BERADA
     public static final String URL_ADDPLGN= ipAddres+"cafe-api/addPelanggan.php";
@@ -16,7 +16,7 @@ public class Config {
     //If server response is equal to this that means login is successful
     public static final String LOGIN_FAIL = "Gagal!";
     public static final String INPT_PELANGGAN_SUCCES = "Sukses";
-    public static final String INPT_PSNAN_SUCCES = "Sukses tambah pesanan";
+    public static final String INPT_PSNAN_SUCCES = "SuksesSukses";
 
     //Dibawah ini merupakan Kunci yang akan digunakan untuk mengirim permintaan ke Skrip PHP
     public static final String KEY_ID = "id";

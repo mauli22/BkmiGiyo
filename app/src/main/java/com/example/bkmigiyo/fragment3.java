@@ -69,15 +69,6 @@ public class fragment3 extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_fragment3, null);
-
-        pelayan = getActivity().getIntent().getStringExtra(tag);
-        Bundle data = new Bundle();
-        data.putString(tag, pelayan);
-        fragment2 fragtry = new fragment2();
-        Fragment1 ae = new Fragment1();
-        fragtry.setArguments(data);
-        ae.setArguments(data);
-        Toast.makeText(getContext(),"ini fragment3, "+pelayan,Toast.LENGTH_SHORT).show();
         return rootView;
         //return inflater.inflate(R.layout.fragment_fragment3, container, false);
     }
@@ -125,6 +116,7 @@ public class fragment3 extends Fragment {
                 String pedas="";
                 String keterangan="";
                 String jumlH="";
+                int i = 0;
 
                 final String pelanggan = pelanggan1.getText().toString().trim();
                 final String meja = meja1.getSelectedItem().toString();
@@ -135,68 +127,65 @@ public class fragment3 extends Fragment {
                 } else if (TextUtils.isEmpty(meja)) {
                     Toast.makeText(getContext(), "Meja is Required", Toast.LENGTH_SHORT).show();
                 } else {
-                    inserPelanggan(meja,pelanggan,pelayan1);
-                    SQLiteDatabase database = dbhelper.getReadableDatabase();
-                    String sql = "SELECT * FROM " + DBPesanan.table_name;
-                    //MEMBUAT KURSOR UNTUK MEMBUKA DATABASE
-                    Cursor c = database.rawQuery(sql, null);
+                    inserPelanggan(meja, pelanggan, pelayan1);
+                    while (i > 1) {
+                        SQLiteDatabase database = dbhelper.getReadableDatabase();
+                        String sql = "SELECT * FROM " + DBPesanan.table_name;
+                        //MEMBUAT KURSOR UNTUK MEMBUKA DATABASE
+                        Cursor c = database.rawQuery(sql, null);
 
-                    if (c.getCount() > 0)
-                        while (c.moveToNext()) {
-                            //
-                            if (c.getString(c.getColumnIndex(DBPesanan.makanan))== null) {
-                                menu = c.getString(c.getColumnIndex(DBPesanan.minuman));
-                            }else {
-                                menu = c.getString(c.getColumnIndex(DBPesanan.makanan));
+                        if (c.getCount() > 0)
+                            while (c.moveToNext()) {
+                                //
+                                if (c.getString(c.getColumnIndex(DBPesanan.makanan))== null) {
+                                    menu = c.getString(c.getColumnIndex(DBPesanan.minuman));
+                                }else {
+                                    menu = c.getString(c.getColumnIndex(DBPesanan.makanan));
+                                }
+
+                                if (c.getString(c.getColumnIndex(DBPesanan.toping))== null) {
+                                    toping = "-";
+                                }else {
+                                    toping = c.getString(c.getColumnIndex(DBPesanan.toping));
+                                }
+
+                                if (c.getString(c.getColumnIndex(DBPesanan.pedas))==null) {
+                                    pedas = "-";
+                                }else {
+                                    pedas = c.getString(c.getColumnIndex(DBPesanan.pedas));
+                                }
+
+                                if (c.getString(c.getColumnIndex(DBPesanan.ket))==null) {
+                                    keterangan = "-";
+                                }else {
+                                    keterangan = c.getString(c.getColumnIndex(DBPesanan.ket));
+                                }
+
+                                if (c.getString(c.getColumnIndex(DBPesanan.jumlahmakanan))==null) {
+                                    jumlH = c.getString(c.getColumnIndex(DBPesanan.jumlahminuman));
+                                }else {
+                                    jumlH = c.getString(c.getColumnIndex(DBPesanan.jumlahmakanan));
+                                }
+
+                                insertPesanan(menu,toping,pedas,keterangan,jumlH,cttn,pelanggan,meja);
+                                Log.d("seharusnyaaa",menu+" - "+toping+" - "+pedas+" - "+keterangan+" - "+jumlH);
                             }
 
-                            if (c.getString(c.getColumnIndex(DBPesanan.toping))== null) {
-                                toping = "-";
-                            }else {
-                                toping = c.getString(c.getColumnIndex(DBPesanan.toping));
-                            }
-
-                            if (c.getString(c.getColumnIndex(DBPesanan.pedas))==null) {
-                                pedas = "-";
-                            }else {
-                                pedas = c.getString(c.getColumnIndex(DBPesanan.pedas));
-                            }
-
-                            if (c.getString(c.getColumnIndex(DBPesanan.ket))==null) {
-                                keterangan = "-";
-                            }else {
-                                keterangan = c.getString(c.getColumnIndex(DBPesanan.ket));
-                            }
-
-                            if (c.getString(c.getColumnIndex(DBPesanan.jumlahmakanan))==null) {
-                                jumlH = c.getString(c.getColumnIndex(DBPesanan.jumlahminuman));
-                            }else {
-                                jumlH = c.getString(c.getColumnIndex(DBPesanan.jumlahmakanan));
-                            }
-
-                            insertPesanan(menu,toping,pedas,keterangan,jumlH,cttn,pelanggan,meja);
-                            Log.d("seharusnyaaa",menu+" - "+toping+" - "+pedas+" - "+keterangan+" - "+jumlH);
-                        }
-
-                    //SQLiteDatabase database = dbhelper.getReadableDatabase();
-                    database.execSQL("DELETE FROM " + DBPesanan.table_name);
-                    database.execSQL("delete from sqlite_sequence where name='" + DBPesanan.table_name + "'");
-                    database.close();
+                        //SQLiteDatabase database = dbhelper.getReadableDatabase();
+                        database.execSQL("DELETE FROM " + DBPesanan.table_name);
+                        database.execSQL("delete from sqlite_sequence where name='" + DBPesanan.table_name + "'");
+                        database.close();
 
 
-                    editor.putString("tab_opened", "2");
-                    editor.commit();
-                    Bundle data = new Bundle();
-                    data.putString(tag, pelayan);
-                    fragment2 fragtry = new fragment2();
-                    Fragment1 ae = new Fragment1();
-                    fragtry.setArguments(data);
-                    ae.setArguments(data);
-                    getActivity().startActivity(new Intent(getActivity(), MainActivity.class));
-                    getActivity().finish();
+                        editor.putString("tab_opened", "2");
+                        editor.commit();
+
+                        getActivity().startActivity(new Intent(getActivity(), MainActivity.class));
+                        getActivity().finish();
+                        i=1;
+                    }
 
                 }
-
             }
 
         });
